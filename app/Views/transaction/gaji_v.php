@@ -177,9 +177,10 @@
                                     $ke = $_POST["ke"];
                                     $table = "user";
                                     $build = $this->db->table($table);
-                                    $build->select("*,user.user_id");
+                                    $build->select("*,user.user_id as user_id,user.user_nik as user_nik");
                                     $build->join(
                                         "(SELECT user_id, 
+                                                SUM(absen_setengah) AS jmlsetengah, 
                                                 SUM(absen_hadir) AS jmlhari, 
                                                 SUM(absen_lembur) AS jmllembur, 
                                                 absen_date 
@@ -245,19 +246,20 @@
                                 $absen = ["Tidak", "Perjam", "Insentif"];
                                 foreach ($usr->getResult() as $usr) {
                                     $harigaji = $usr->jmlhari * $usr->user_gajiharian;
+                                    $setengahgaji = $usr->jmlsetengah/2 * $usr->user_gajiharian;
                                     $lemburgaji = $usr->jmllembur * $usr->user_lemburharian;
                                 ?>
                                     <tr>
-                                        <td class="w100  text-center pl-1"><a target="_blank" href="<?= base_url("gajiprint?user_id=" . $usr->user_id); ?>" class="fa fa-print"></a></td>
+                                        <td class="w100  text-center pl-1"><a target="_blank" href="<?= base_url("gajiprint?user_id=" . $usr->user_id."&dari=".$_POST["dari"]."&ke=".$_POST["ke"]."&user_id=".$usr->user_id); ?>" class="fa fa-print"></a></td>
                                         <td class="w100 bg-second text-left pl-1"><?= $usr->departemen_name; ?></td>
                                         <td class="w100 bg-second text-left pl-1"><?= $usr->position_name; ?></td>
                                         <td class="w100 bg-second text-center"><?= $usr->user_nik; ?></td>
                                         <td class="w150 text-left pl-1 bg-second"><?= $usr->user_nama; ?></td>
                                         <td class="w50">
-                                            <?= $usr->jmlhari; ?>
+                                            <?= $usr->jmlhari + ($usr->jmlsetengah/2); ?>
                                         </td>
                                         <td class="w50">
-                                            <?= number_format($harigaji, 0, ",", "."); ?>
+                                            <?= number_format($harigaji + $setengahgaji, 0, ",", "."); ?>
                                         </td>
                                         <td class="w50">
                                             <?= number_format($lemburgaji, 0, ",", "."); ?>
@@ -266,7 +268,7 @@
                                             <?= number_format($usr->kasbon, 0, ",", "."); ?>
                                         </td>
                                         <td class="w50">
-                                            <?= number_format($harigaji + $harigaji - $usr->kasbon, 0, ",", "."); ?>
+                                            <?= number_format($harigaji + $setengahgaji + $lemburgaji - $usr->kasbon, 0, ",", "."); ?>
                                         </td>
                                     </tr>
                                     <script>

@@ -336,6 +336,7 @@ class invpayment_m extends core_m
             $input["kas_saldo"] = $saldo;
             $input["kas_bigcash"] = $bigcash;
             $input["kas_pettycash"] = $pettycash;
+            $input["kas_keterangan"] = $this->request->getPost("invpayment_keterangan");
 
             $this->db->table('kas')->update($input, array("kas_id" => $kas_id));
 

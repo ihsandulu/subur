@@ -159,9 +159,9 @@
                                 <?php
                                 $join = "";
                                 $table1 = "user";
-                                $tgl=date("Y-m-d");
+                                $tgl = date("Y-m-d");
                                 if (isset($_POST["submit"])) {
-                                    $tgl=$_POST["tanggal"];
+                                    $tgl = $_POST["tanggal"];
                                     $table = "user";
                                     $build = $this->db->table($table);
                                     $build->select("*,user.user_id");
@@ -218,15 +218,19 @@
                                         <td class="w100 bg-second text-center"><?= $usr->user_nik; ?></td>
                                         <td class="w150 text-left pl-1 bg-second"><?= $usr->user_nama; ?></td>
                                         <td class="w50">
-                                            <input id="absen_hadir<?= $usr->user_id; ?>" onchange="hadir('<?= $usr->user_id; ?>',1,'<?=$tgl;?>')" type="checkbox" class="normal<?= $usr->user_id; ?>" value="1" <?= ($usr->absen_hadir == "1") ? "checked" : ""; ?>>
+                                            <input id="absen_hadir<?= $usr->user_id; ?>" onchange="hadir('<?= $usr->user_id; ?>',1,'<?= $tgl; ?>')" type="checkbox" class="normal<?= $usr->user_id; ?>" value="1" <?= ($usr->absen_hadir == "1") ? "checked" : ""; ?>>
+                                            Full
+
+                                            <input id="absen_setengah<?= $usr->user_id; ?>" onchange="hadir('<?= $usr->user_id; ?>',1,'<?= $tgl; ?>')" type="checkbox" class="normal<?= $usr->user_id; ?>" value="1" <?= ($usr->absen_setengah == "1") ? "checked" : ""; ?>>
+                                            1/2
                                         </td>
                                         <td class="w50">
-                                            <input id="absen_lembur<?= $usr->user_id; ?>" onchange="hadir('<?= $usr->user_id; ?>',1,'<?=$tgl;?>')" type="checkbox" class="normal<?= $usr->user_id; ?>" value="1" <?= ($usr->absen_lembur == "1") ? "checked" : ""; ?>>
+                                            <input id="absen_lembur<?= $usr->user_id; ?>" onchange="hadir('<?= $usr->user_id; ?>',1,'<?= $tgl; ?>')" type="checkbox" class="normal<?= $usr->user_id; ?>" value="1" <?= ($usr->absen_lembur == "1") ? "checked" : ""; ?>>
                                         </td>
                                     </tr>
                                     <script>
                                         $(document).ready(function() {
-                                            
+
                                         });
                                     </script>
                                 <?php } ?>
@@ -250,11 +254,13 @@
     }
 
     function hadir(id, notif, absen_date) {
-       let absen_hadir = $("#absen_hadir" + id).is(":checked") ? 1 : 0;
-       let absen_lembur = $("#absen_lembur" + id).is(":checked") ? 1 : 0;
-        $("#test").html("<?= base_url("api/inputabsenhadir"); ?>?absen_date=" + absen_date + "&absen_hadir=" + absen_hadir + "&absen_lembur=" + absen_lembur + "&user_id=" + id);
+        let absen_hadir = $("#absen_hadir" + id).is(":checked") ? 1 : 0;
+        let absen_lembur = $("#absen_lembur" + id).is(":checked") ? 1 : 0;
+        let absen_setengah = $("#absen_setengah" + id).is(":checked") ? 1 : 0;
+        $("#test").html("<?= base_url("api/inputabsenhadir"); ?>?absen_date=" + absen_date + "&absen_hadir=" + absen_hadir + "&absen_setengah=" + absen_setengah + "&absen_lembur=" + absen_lembur + "&user_id=" + id);
         $.get("<?= base_url("api/inputabsenhadir"); ?>", {
                 absen_hadir: absen_hadir,
+                absen_setengah: absen_setengah,
                 absen_lembur: absen_lembur,
                 absen_date: absen_date,
                 user_id: id

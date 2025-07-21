@@ -204,7 +204,12 @@ function terbilang($angka)
         white-space: normal;
         word-wrap: break-word;
     }
-    .bt{border-top:rgba(0, 0, 0, 0.3) solid 1px; margin-top: 5px; padding-top: 5px;}
+
+    .bt {
+        border-top: rgba(0, 0, 0, 0.3) solid 1px;
+        margin-top: 5px;
+        padding-top: 5px;
+    }
 </style>
 
 <div class='container-fluid'>
@@ -239,18 +244,23 @@ function terbilang($angka)
                 $dari = date("Y-m-d");
                 $ke = date("Y-m-d");
 
-                $dari = $_GET["dari"];
-                $ke = $_GET["ke"];
+                if (isset($_GET["dari"])) {
+                    $dari = $_GET["dari"];
+                }
+                if (isset($_GET["ke"])) {
+                    $ke = $_GET["ke"];
+                }
                 $table = "user";
                 $build = $this->db->table($table);
                 $build->select("*,user.user_id");
                 $build->join(
                     "(SELECT user_id, 
-                                                SUM(absen_hadir) AS jmlhari, 
-                                                SUM(absen_lembur) AS jmllembur, 
-                                                absen_date 
-                                        FROM absen 
-                                        GROUP BY user_id) absen",
+                        SUM(absen_setengah) AS jmlsetengah, 
+                        SUM(absen_hadir) AS jmlhari, 
+                        SUM(absen_lembur) AS jmllembur, 
+                        absen_date 
+                    FROM absen 
+                    GROUP BY user_id) absen",
                     "absen.user_id = user.user_id AND absen.absen_date >= '" . $dari . "' AND absen.absen_date <= '" . $ke . "'",
                     "left"
                 );
@@ -258,10 +268,10 @@ function terbilang($angka)
                 // Subquery untuk kas
                 $build->join(
                     "(SELECT user_id, 
-                                                SUM(kas_total) AS kasbon, 
-                                                kas_date 
-                                        FROM kas 
-                                        GROUP BY user_id) kas",
+                        SUM(kas_total) AS kasbon, 
+                        kas_date 
+                    FROM kas 
+                    GROUP BY user_id) kas",
                     "kas.user_id = user.user_id AND kas.kas_date >= '" . $dari . "' AND absen.absen_date <= '" . $ke . "'",
                     "left"
                 )
@@ -289,6 +299,10 @@ function terbilang($angka)
                         $user_nik = $_GET["user_nik"];
                         $build->like("$table1.user_nik", $user_nik, "both");
                     }
+                    if (isset($_GET["user_id"]) && $_GET["user_id"] != "" && $_GET["user_id"] != "all") {
+                        $user_id = $_GET["user_id"];
+                        $build->where("$table1.user_id", $user_id, "both");
+                    }
                     if ((isset($_GET["departemen_id"]) && $_GET["departemen_id"] == "") && (isset($_GET["position_id"]) && $_GET["position_id"] == "") && (isset($_GET["user_nama"]) && $_GET["user_nama"] == "") && (isset($_GET["user_nik"]) && $_GET["user_nik"] == "")) {
                         $build->where("$table1.position_id", "0");
                     }
@@ -304,6 +318,7 @@ function terbilang($angka)
                 $absen = ["Tidak", "Perjam", "Insentif"];
                 foreach ($usr->getResult() as $usr) {
                     $harigaji = $usr->jmlhari * $usr->user_gajiharian;
+                    $setengahgaji = $usr->jmlsetengah / 2 * $usr->user_gajiharian;
                     $lemburgaji = $usr->jmllembur * $usr->user_lemburharian;
                 ?>
                     <div class="col-4 p-1">
@@ -332,16 +347,18 @@ function terbilang($angka)
                             </div>
                             <div class="col-12 bt">
                                 <div class="row">
-                                    <div class="col-6">Hari Masuk</div>
+                                    <div class="col-6">Full Masuk</div>
                                     <div class="col-6">: <?= $usr->jmlhari; ?> hari</div>
+                                    <div class="col-6">Setengah Hari</div>
+                                    <div class="col-6">: <?= $usr->jmlsetengah; ?> hari</div>
                                     <div class="col-6">Gaji Kotor</div>
-                                    <div class="col-6">: <?= number_format($harigaji, 0, ",", "."); ?></div>
+                                    <div class="col-6">: <?= number_format($harigaji + $setengahgaji, 0, ",", "."); ?></div>
                                     <div class="col-6">Lembur</div>
                                     <div class="col-6">: <?= number_format($lemburgaji, 0, ",", "."); ?></div>
                                     <div class="col-6">Kasbon</div>
                                     <div class="col-6">: <?= number_format($usr->kasbon, 0, ",", "."); ?></div>
                                     <div class="col-6">Gaji Bersih</div>
-                                    <div class="col-6">: <?= number_format($harigaji + $harigaji - $usr->kasbon, 0, ",", "."); ?></div>
+                                    <div class="col-6">: <?= number_format($harigaji + $setengahgaji + $lemburgaji - $usr->kasbon, 0, ",", "."); ?></div>
                                 </div>
                             </div>
 

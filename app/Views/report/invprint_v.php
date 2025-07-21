@@ -154,6 +154,11 @@ function terbilang($angka)
         color: grey;
     }
 
+    #tagline {
+        font-size: 12px;
+        color: grey;
+    }
+
     .uang {
         display: flex;
         justify-content: space-between;
@@ -204,7 +209,7 @@ function terbilang($angka)
 
 <div class='container-fluid'>
     <div class='row'>
-        <!-- <div class='col-12 border-bottom atas'>
+        <div class='col-12 border-bottom atas'>
             <div class="row">
                 <div class='col-4 text-right'>
                     <?php
@@ -213,6 +218,10 @@ function terbilang($angka)
                     $identity = $this->db->table("identity")->get()->getRow();
                     $identitypicture = $identity->identity_logo;
                     $identity_company = $identity->identity_company;
+                    $identity_tagline = $identity->identity_tagline;
+                    $identity_address = $identity->identity_address;
+                    $identity_phone = $identity->identity_phone;
+                    $identity_website = $identity->identity_website;
                     if ($identitypicture != "") {
                         $user_image = "images/identity_logo/" . $identitypicture . "?" . time();
                     } else {
@@ -222,11 +231,13 @@ function terbilang($angka)
                 </div>
                 <div class='col-8 text-left'>
                     <div id="perusahaan"><?= ($identity_company != "") ? $identity_company : "PT. Nevan Kirana Logistik"; ?></div>
-                    <div id="tagline">PROJECT CARGO - INLAND TRUCK - CARGO MOOVING - CONTAINERIZED</div>
+                    <div id="tagline"><?=$identity_tagline;?></div>
+                    <div id="tagline2"><?=$identity_address;?></div>
+                    <div id="tagline2"><?=$identity_phone;?>, <?=$identity_website;?></div>
                 </div>
             </div>
-        </div> -->
-        <div class='col-12 border-bottom atas' style="height:3.5cm;"></div>
+        </div>
+        <!-- <div class='col-12 border-bottom atas' style="height:3.5cm;"></div> -->
 
         <?php
         $inv = $this->db->table("inv")

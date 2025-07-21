@@ -64,7 +64,7 @@ class api extends BaseController
 ?>
         <?php if ($asal == "from") { ?>
             <option value="" <?= ($kas_rekdari == "") ? "selected" : ""; ?>>Select Rekening</option>
-            <?php if ($type == "Kredit" && $url == "pettycash") { ?>
+            <?php if (($type == "Kredit"||$type == "Kasbon") && $url == "pettycash") { ?>
                 <option value="-1" <?= ($kas_rekke == "-1") ? "selected" : ""; ?>>Pettycash</option>
             <?php } ?>
         <?php } else { ?>
@@ -77,7 +77,7 @@ class api extends BaseController
             <?php } ?>
         <?php } ?>
         <?php
-        if (($type != "Kredit" && $url == "pettycash" && $asal == "from") || ($type != "Debet" && $url == "pettycash" && $asal == "to") || ($url == "bigcash")) {
+        if (($type != "Kredit" && $type != "Kasbon" && $url == "pettycash" && $asal == "from") || ($type != "Debet" && $url == "pettycash" && $asal == "to") || ($url == "bigcash")) {
             $build = $this->db
                 ->table("rekening")
                 ->join("bank", "bank.bank_id=rekening.bank_id", "left");

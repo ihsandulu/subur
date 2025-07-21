@@ -39,6 +39,9 @@
     if (isset($_GET["ke"])) {
         $ke = $_GET["ke"];
     }
+    if (isset($_GET["user_id"])) {
+        $user_id = $_GET["user_id"];
+    }
     if (isset($_GET["departemen"])) {
         $idepartemen = $_GET["departemen"];
     }

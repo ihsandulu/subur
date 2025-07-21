@@ -64,6 +64,13 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label class="control-label col-sm-2" for="identity_tagline">Tagline:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text"  class="form-control" id="identity_tagline" name="identity_tagline" placeholder="" value="<?= $identity_tagline; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label class="control-label col-sm-2" for="identity_email">Email:</label>
                                     <div class="col-sm-10">
                                         <input type="text"  class="form-control" id="identity_email" name="identity_email" placeholder="" value="<?= $identity_email; ?>">
