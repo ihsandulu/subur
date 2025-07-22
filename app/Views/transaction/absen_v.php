@@ -257,7 +257,7 @@
         let absen_hadir = $("#absen_hadir" + id).is(":checked") ? 1 : 0;
         let absen_lembur = $("#absen_lembur" + id).is(":checked") ? 1 : 0;
         let absen_setengah = $("#absen_setengah" + id).is(":checked") ? 1 : 0;
-        $("#test").html("<?= base_url("api/inputabsenhadir"); ?>?absen_date=" + absen_date + "&absen_hadir=" + absen_hadir + "&absen_setengah=" + absen_setengah + "&absen_lembur=" + absen_lembur + "&user_id=" + id);
+        // $("#test").html("<?= base_url("api/inputabsenhadir"); ?>?absen_date=" + absen_date + "&absen_hadir=" + absen_hadir + "&absen_setengah=" + absen_setengah + "&absen_lembur=" + absen_lembur + "&user_id=" + id);
         $.get("<?= base_url("api/inputabsenhadir"); ?>", {
                 absen_hadir: absen_hadir,
                 absen_setengah: absen_setengah,
